@@ -46,20 +46,20 @@ userSchema.pre("save", async function (next) {
 });
 
 //check the password isCorrect or not.
-userSchema.method.isPasswordCorrect = async function (password) {
+userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcryptjs.compare(password, this.password);
 };
 
 //generate the access token
-userSchema.method.generateAccessToken = function () {
+userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
       userName: this.userName,
     },
-    process.env.BCRYPTJS_SECRET_KEY,
+    process.env.JWT_SECRET_KEY,
     {
-      expiresIn: BCRYPTJS_TOKEN_EXPIRES_IN,
+      expiresIn: process.env.JWT_TOKEN_EXPIRES_IN,
     }
   );
 };
