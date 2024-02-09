@@ -105,3 +105,23 @@ const updateEmail = async (req , res) => {
         console.log("Error" , error);
     }
 }
+
+//update firstName
+const updateFirstName = async (req , res) => {
+    try {
+        const firstName = req.body?.email;
+        if(!firstName) {
+           res.json({status: false , message: "firstName required"})
+        }
+        
+        const user = req?.user;
+
+        user.firstName = firstName;
+
+        await user.save({validateBeforeSave: false})
+
+
+    } catch (error) {
+        console.log("Error" , error);
+    }
+}
