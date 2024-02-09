@@ -40,3 +40,28 @@ const createUser = async (req , res) => {
     }
 }
 
+//login user
+const login = async (req , res) => {
+    try {
+        const [userName , password] = req.body;
+
+        if(!userName) {
+            res.json({status: false , message: "userName required"})
+        } else if(!password) {
+            res.json({status: false , message: "password required"})
+        }
+         
+        const isMatchPassword = User.isPasswordCorrect(password);
+        const isMatchUserName = req?.user?.userName === userName;
+
+        if(isMatchPassword && isMatchUserName) {
+            const token = User.generateAccessToken();
+            res.status(200).json({status: true , message: "login Sucessfully" , accessToken: token , user: req?.user})
+        } else {
+            res.json({status: false , message: "Invalid user"})
+        }
+
+    } catch (error) {
+        console.log("Error", error);
+    }
+}
