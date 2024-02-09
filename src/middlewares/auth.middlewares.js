@@ -4,13 +4,15 @@ const jwt = require("jsonwebtoken");
 
 const verifyJWT = async (req , res , next) => {
      try {
-        const token = req.header("Authorization")?.replace("Bearer" , "");
+        const token = req.header("authorization")?.replace("Bearer" , '');
 
+        
         if(!token) {
             res.status(404).json({statusCode: 404 , status: false , message: "unauthorized User"})
+            return;
         }
-
-        const decodedToken =  jwt.verify(token , process.env.BCRYPTJS_SECRET_KEY)
+        
+        const decodedToken =  jwt.verify(token , process.env.JWT_SECRET_KEY)
 
         const user = await User.findById(decodedToken?._id);
 
@@ -19,12 +21,12 @@ const verifyJWT = async (req , res , next) => {
         }
 
         req.user = user;
-        req.accessToken = User.generateAccessToken();
+        // req.accessToken = await user.generateAccessToken();
         next();
 
 
      } catch (error) {
-        console.log("Error", error)
+        console.log("Error:", error)
      }
 }
 
