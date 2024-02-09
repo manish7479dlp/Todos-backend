@@ -137,9 +137,10 @@ const updateFirstName = async (req, res) => {
 //update lastName
 const updateLastName = async (req, res) => {
   try {
-    const lastName = req.body?.email;
+    const lastName = req.body?.lastName;
     if (!lastName) {
       res.json({ status: false, message: "lastName required" });
+      return;
     }
 
     const user = req?.user;
