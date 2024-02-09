@@ -9,7 +9,9 @@ app.use(express.json());
 //to enable cross origin resouce sharing 
 app.use(cors());
 
-
+app.get("/" , (req , res) => {
+    res.send("hlw from the other side..")
+})
 
 // route import
 
