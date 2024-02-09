@@ -14,6 +14,8 @@ const createUser = async (req, res) => {
       res.json({ status: false, message: "password required" });
     } else if (!email) {
       res.json({ status: false, message: "email required" });
+    } else if(!userName) {
+      res.json({ status: false, message: "userName required" });
     }
 
     const isExistingUser = await find({ userName });
