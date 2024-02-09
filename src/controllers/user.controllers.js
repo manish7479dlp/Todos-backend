@@ -84,13 +84,15 @@ const updatePassword = async (req, res) => {
     const newPassword = req.body?.password;
     if (!newPassword) {
       res.json({ status: false, message: "password required" });
+      return;
     }
 
     const user = req?.user;
 
-    user.password = await bcryptjs.hash(newPassword, 10);
+    user.password = newPassword
 
     await user.save({ validateBeforeSave: false });
+    res.json({status: true , message: "password updated sucessfully"})
   } catch (error) {
     console.log("Error", error);
   }
