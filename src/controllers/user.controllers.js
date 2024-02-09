@@ -43,7 +43,7 @@ const createUser = async (req, res) => {
 //login user
 const login = async (req, res) => {
   try {
-    const [userName, password] = req.body;
+    const {userName, password} = req.body;
 
     if (!userName) {
       res.json({ status: false, message: "userName required" });
@@ -51,11 +51,19 @@ const login = async (req, res) => {
       res.json({ status: false, message: "password required" });
     }
 
-    const isMatchPassword = User.isPasswordCorrect(password);
-    const isMatchUserName = req?.user?.userName === userName;
+    const user = await User.findOne({userName})
 
+    if(!user) {
+      res.json({ status: false, message: "Invalid user" });
+      return;
+    }
+
+    const isMatchPassword = await user.isPasswordCorrect(password);
+    const isMatchUserName = user?.userName === userName;
+
+//check both password or userName match or not.
     if (isMatchPassword && isMatchUserName) {
-      const token = User.generateAccessToken();
+      const token = user.generateAccessToken();
       res.status(200).json({
         status: true,
         message: "login Sucessfully",
