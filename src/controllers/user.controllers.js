@@ -183,11 +183,23 @@ const updateUserDetails = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     res.json({ status: true, message: "user details updated sucessfully" });
-    
+
   } catch (error) {
     console.log("Error", error);
   }
 };
+
+//Delete user
+const deleteUser = async (req , res) => {
+  try {
+    const _id = req?.user._id
+    await User.findByIdAndDelete(_id);
+
+    res.json({status: true , message: "User deleted sucessfully."})
+  } catch (error) {
+    console.log("Error", error)
+  }
+}
 
 module.exports = {
   createUser,
@@ -197,4 +209,5 @@ module.exports = {
   updatePassword,
   updateEmail,
   updateUserDetails,
+  deleteUser,
 };
