@@ -1,5 +1,5 @@
 const User = require("../models/user.models")
-
+const bcryptjs = require("bcryptjs")
 
 //create user
 const createUser = async (req , res) => {
@@ -63,5 +63,45 @@ const login = async (req , res) => {
 
     } catch (error) {
         console.log("Error", error);
+    }
+}
+
+//update password
+const updatePassword = async (req , res) => {
+    try {
+        const newPassword = req.body?.password;
+        if(!newPassword) {
+           res.json({status: false , message: "password required"})
+        }
+        
+        const user = req?.user;
+
+        user.password = await bcryptjs.hash(newPassword , 10);
+
+        await user.save({validateBeforeSave: false})
+
+
+    } catch (error) {
+        console.log("Error" , error);
+    }
+}
+
+//update email
+const updateEmail = async (req , res) => {
+    try {
+        const newEmail = req.body?.email;
+        if(!newEmail) {
+           res.json({status: false , message: "email required"})
+        }
+        
+        const user = req?.user;
+
+        user.email = newEmail;
+
+        await user.save({validateBeforeSave: false})
+
+
+    } catch (error) {
+        console.log("Error" , error);
     }
 }
