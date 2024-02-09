@@ -172,3 +172,5 @@ const updateUserDetails = async (req, res) => {
     console.log("Error", error);
   }
 };
+
+module.exports = {createUser , login , updateLastName , updateFirstName , updatePassword , updateEmail , updateUserDetails}
