@@ -20,8 +20,10 @@ const createUser = async (req, res) => {
     const isExistingUser = await User.find({ userName });
 
     if (isExistingUser.length > 0) {
-      res.status(400).json({ status: false, message: "userName already exits" });
-      return
+      res
+        .status(400)
+        .json({ status: false, message: "userName already exits" });
+      return;
     }
 
     const user = await User.create({
@@ -33,7 +35,9 @@ const createUser = async (req, res) => {
     });
 
     if (user) {
-      res.status(201).json({ status: true, message: "user created sucessfully" });
+      res
+        .status(201)
+        .json({ status: true, message: "user created sucessfully" });
     }
   } catch (error) {
     console.log("Error", error);
@@ -43,7 +47,7 @@ const createUser = async (req, res) => {
 //login user
 const login = async (req, res) => {
   try {
-    const {userName, password} = req.body;
+    const { userName, password } = req.body;
 
     if (!userName) {
       res.json({ status: false, message: "userName required" });
@@ -51,9 +55,9 @@ const login = async (req, res) => {
       res.json({ status: false, message: "password required" });
     }
 
-    const user = await User.findOne({userName})
+    const user = await User.findOne({ userName });
 
-    if(!user) {
+    if (!user) {
       res.json({ status: false, message: "Invalid user" });
       return;
     }
@@ -61,7 +65,7 @@ const login = async (req, res) => {
     const isMatchPassword = await user.isPasswordCorrect(password);
     const isMatchUserName = user?.userName === userName;
 
-//check both password or userName match or not.
+    //check both password or userName match or not.
     if (isMatchPassword && isMatchUserName) {
       const token = user.generateAccessToken();
       res.status(200).json({
@@ -89,10 +93,10 @@ const updatePassword = async (req, res) => {
 
     const user = req?.user;
 
-    user.password = newPassword
+    user.password = newPassword;
 
     await user.save({ validateBeforeSave: false });
-    res.json({status: true , message: "password updated sucessfully"})
+    res.json({ status: true, message: "password updated sucessfully" });
   } catch (error) {
     console.log("Error", error);
   }
@@ -112,7 +116,7 @@ const updateEmail = async (req, res) => {
     user.email = newEmail;
 
     await user.save({ validateBeforeSave: false });
-    res.json({status: true , message: "email updated sucessfully"})
+    res.json({ status: true, message: "email updated sucessfully" });
   } catch (error) {
     console.log("Error", error);
   }
@@ -124,7 +128,7 @@ const updateFirstName = async (req, res) => {
     const firstName = req.body?.firstName;
     if (!firstName) {
       res.json({ status: false, message: "firstName required" });
-      return
+      return;
     }
 
     const user = req?.user;
@@ -132,7 +136,7 @@ const updateFirstName = async (req, res) => {
     user.firstName = firstName;
 
     await user.save({ validateBeforeSave: false });
-    res.json({status: true , message: "firstName updated sucessfully"})
+    res.json({ status: true, message: "firstName updated sucessfully" });
   } catch (error) {
     console.log("Error", error);
   }
@@ -152,8 +156,7 @@ const updateLastName = async (req, res) => {
     user.lastName = lastName;
 
     await user.save({ validateBeforeSave: false });
-    res.json({status: true , message: "lastName updated sucessfully"})
-
+    res.json({ status: true, message: "lastName updated sucessfully" });
   } catch (error) {
     console.log("Error", error);
   }
@@ -162,8 +165,8 @@ const updateLastName = async (req, res) => {
 //Update user Details
 const updateUserDetails = async (req, res) => {
   try {
-    const [firstName, lastName, email] = req.body;
-
+    const {firstName, lastName, email} = req.body;
+    
     if (!firstName) {
       res.json({ status: false, message: "firstName required" });
     } else if (!lastName) {
@@ -171,15 +174,16 @@ const updateUserDetails = async (req, res) => {
     } else if (!email) {
       res.json({ status: false, message: "email required" });
     }
-
-    const user = req.body?.user;
+    
+    const user = req?.user;
 
     (user.firstName = firstName),
-      (user.lastName = lastName),
-      (user.email = email),
-      await user.save({ validateBeforeSave: false });
+    (user.lastName = lastName),
+    (user.email = email),
+    await user.save({ validateBeforeSave: false });
 
     res.json({ status: true, message: "user details updated sucessfully" });
+    
   } catch (error) {
     console.log("Error", error);
   }
