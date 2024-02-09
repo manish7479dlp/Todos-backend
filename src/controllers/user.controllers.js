@@ -102,6 +102,7 @@ const updateEmail = async (req, res) => {
     const newEmail = req.body?.email;
     if (!newEmail) {
       res.json({ status: false, message: "email required" });
+      return;
     }
 
     const user = req?.user;
@@ -109,6 +110,7 @@ const updateEmail = async (req, res) => {
     user.email = newEmail;
 
     await user.save({ validateBeforeSave: false });
+    res.json({status: true , message: "email updated sucessfully"})
   } catch (error) {
     console.log("Error", error);
   }
