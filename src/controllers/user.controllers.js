@@ -4,7 +4,7 @@ const bcryptjs = require("bcryptjs");
 //create user
 const createUser = async (req, res) => {
   try {
-    const [firstName, lastName, password, userName, email] = req.body;
+    const { firstName, lastName, password, userName, email } = req.body;
 
     if (!firstName) {
       res.json({ status: false, message: "firstName required" });
@@ -14,17 +14,17 @@ const createUser = async (req, res) => {
       res.json({ status: false, message: "password required" });
     } else if (!email) {
       res.json({ status: false, message: "email required" });
-    } else if(!userName) {
+    } else if (!userName) {
       res.json({ status: false, message: "userName required" });
     }
+    const isExistingUser = await User.find({ userName });
 
-    const isExistingUser = await find({ userName });
-
-    if (isExistingUser) {
-      res.json({ status: false, message: "userName already exits" });
+    if (isExistingUser.length > 0) {
+      res.status(400).json({ status: false, message: "userName already exits" });
+      return
     }
 
-    const user = await new User.create({
+    const user = await User.create({
       firstName,
       lastName,
       password,
@@ -33,9 +33,7 @@ const createUser = async (req, res) => {
     });
 
     if (user) {
-      res
-        .status(201)
-        .json({ status: true, message: "user created sucessfully" });
+      res.status(201).json({ status: true, message: "user created sucessfully" });
     }
   } catch (error) {
     console.log("Error", error);
@@ -58,14 +56,12 @@ const login = async (req, res) => {
 
     if (isMatchPassword && isMatchUserName) {
       const token = User.generateAccessToken();
-      res
-        .status(200)
-        .json({
-          status: true,
-          message: "login Sucessfully",
-          accessToken: token,
-          user: req?.user,
-        });
+      res.status(200).json({
+        status: true,
+        message: "login Sucessfully",
+        accessToken: token,
+        user: req?.user,
+      });
     } else {
       res.json({ status: false, message: "Invalid user" });
     }
@@ -166,11 +162,18 @@ const updateUserDetails = async (req, res) => {
       (user.email = email),
       await user.save({ validateBeforeSave: false });
 
-      res.json({status: true , message: "user details updated sucessfully"})
-
+    res.json({ status: true, message: "user details updated sucessfully" });
   } catch (error) {
     console.log("Error", error);
   }
 };
 
-module.exports = {createUser , login , updateLastName , updateFirstName , updatePassword , updateEmail , updateUserDetails}
+module.exports = {
+  createUser,
+  login,
+  updateLastName,
+  updateFirstName,
+  updatePassword,
+  updateEmail,
+  updateUserDetails,
+};
