@@ -117,9 +117,10 @@ const updateEmail = async (req, res) => {
 //update firstName
 const updateFirstName = async (req, res) => {
   try {
-    const firstName = req.body?.email;
+    const firstName = req.body?.firstName;
     if (!firstName) {
       res.json({ status: false, message: "firstName required" });
+      return
     }
 
     const user = req?.user;
@@ -127,6 +128,7 @@ const updateFirstName = async (req, res) => {
     user.firstName = firstName;
 
     await user.save({ validateBeforeSave: false });
+    res.json({status: true , message: "firstName updated sucessfully"})
   } catch (error) {
     console.log("Error", error);
   }
@@ -145,6 +147,8 @@ const updateLastName = async (req, res) => {
     user.lastName = lastName;
 
     await user.save({ validateBeforeSave: false });
+    res.json({status: true , message: "lastName updated sucessfully"})
+
   } catch (error) {
     console.log("Error", error);
   }
