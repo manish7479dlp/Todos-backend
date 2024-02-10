@@ -63,10 +63,18 @@ const updateTitle = async (req, res) => {
 const getAllTodos = async (req , res) => {
   try {
     const allTodos = await Todos.find()
-    const response = []
+    const responseArray = []
     for(let i = 0; i < allTodos.length; i++) {
       const data = await findAllTaskOfGivenTodosId(allTodos[i]._id)
-       response.push({Todos: allTodos[i], tasks: data})
+      const responseData = {
+        title:allTodos[i].title,
+        tasks: data
+      }
+      responseArray.push(responseData)
+    }
+    const response = {
+      length: allTodos.length,
+      todosList: responseArray
     }
     res.json(response)
   } catch (error) {
