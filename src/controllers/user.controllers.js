@@ -65,16 +65,19 @@ const login = async (req, res) => {
     const { userName, password } = req.body;
 
     if (!userName) {
-      res.json({ status: false, message: "userName required" });
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "userName required"));
     } else if (!password) {
-      res.json({ status: false, message: "password required" });
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "password required"));
     }
 
     const user = await User.findOne({ userName });
 
     if (!user) {
-      res.json({ status: false, message: "Invalid user" });
-      return;
+      return res.status(400).json(new apiResonse(400, null, "Invalid user"));
     }
 
     const isMatchPassword = await user.isPasswordCorrect(password);
@@ -83,17 +86,34 @@ const login = async (req, res) => {
     //check both password or userName match or not.
     if (isMatchPassword && isMatchUserName) {
       const token = user.generateAccessToken();
-      res.status(200).json({
-        status: true,
-        message: "login Sucessfully",
-        accessToken: token,
-        user: req?.user,
-      });
+
+      return res
+        .status(200)
+        .json(
+          new apiResonse(
+            200,
+            { user: user, accessToken: token },
+            "login Sucessfully"
+          )
+        );
     } else {
-      res.json({ status: false, message: "Invalid user" });
+      return res
+        .status(400)
+        .json(
+          new apiResonse(400, null, "something went wrong in login controller")
+        );
     }
   } catch (error) {
-    console.log("Error", error);
+    return res
+      .status(400)
+      .json(
+        new apiResonse(
+          400,
+          null,
+          "something went wrong in login controller",
+          error
+        )
+      );
   }
 };
 
