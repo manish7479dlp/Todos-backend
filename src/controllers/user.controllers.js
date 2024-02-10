@@ -260,17 +260,9 @@ const updateUserDetails = async (req, res) => {
       return res
         .status(400)
         .json(new apiResponse(400, null, "lastName required"));
-    } else if (!password) {
-      return res
-        .status(400)
-        .json(new apiResponse(400, null, "password required"));
     } else if (!email) {
       return res.status(400).json(new apiResponse(400, null, "email required"));
-    } else if (!userName) {
-      return res
-        .status(400)
-        .json(new apiResponse(400, null, "userName required"));
-    }
+    } 
 
     const user = req?.user;
 
@@ -280,7 +272,6 @@ const updateUserDetails = async (req, res) => {
 
     const response = await user.save({ validateBeforeSave: false });
 
-    res.json({ status: true, message: "user details updated sucessfully" });
     return res
       .status(200)
       .json(new apiResponse(200, response, "user details updated sucessfully"));
