@@ -31,8 +31,6 @@ const updateTitle = async (req, res) => {
     const { title } = req.body;
     const todosId = req.params._id;
 
-    console.log(title , todosId)
-
     if (!todosId) {
       return res.json({ status: false, message: "todos id required" });
     }
