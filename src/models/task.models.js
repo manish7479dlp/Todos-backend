@@ -21,7 +21,7 @@ const taskSchema = new mongoose.Schema(
       ref: "Todos"
     }
   },
-  { timeseries: true }
+  { timestamps: true }
 );
 
 const Task = mongoose.model("Task" , taskSchema);
