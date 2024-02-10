@@ -40,4 +40,30 @@ const addTask = async (req , res) => {
     }
 }
 
-module.exports = {addTask}
+// update task
+const updateTaskName = async (req , res) => {
+    try {
+        const {taskName} = req.body
+        const taskId = req.params?._id
+
+        if(!taskId) {
+            return res.json({status: false , message: "task id resqured"})
+        }
+
+        if(!taskName) {
+            return res.json({status: false , message: "taksName resqured"})
+        }
+        
+        await Task.findByIdAndUpdate(taskId , {$set:{taskName}})
+        
+
+        
+        return res.json({ status: true, message: "Task Name updated sucessfully" });
+
+    } catch (error) {
+        console.log("Error: " , error)
+        res.json({status: false , error})
+    }
+}
+
+module.exports = {addTask , updateTaskName}
