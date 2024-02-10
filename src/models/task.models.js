@@ -11,6 +11,10 @@ const taskSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timeseries: true }
 );
