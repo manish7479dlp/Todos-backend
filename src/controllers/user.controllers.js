@@ -2,7 +2,7 @@ const User = require("../models/user.models");
 const bcryptjs = require("bcryptjs");
 const Task = require("../models/task.models");
 const Todos = require("../models/todos.models");
-const apiResonse = require("../utility/apiResponse");
+const apiResponse = require("../utility/apiResponse");
 
 //create user
 const createUser = async (req, res) => {
@@ -12,28 +12,28 @@ const createUser = async (req, res) => {
     if (!firstName) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "firstName required"));
+        .json(new apiResponse(400, null, "firstName required"));
     } else if (!lastName) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "lastName required"));
+        .json(new apiResponse(400, null, "lastName required"));
     } else if (!password) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "password required"));
+        .json(new apiResponse(400, null, "password required"));
     } else if (!email) {
-      return res.status(400).json(new apiResonse(400, null, "email required"));
+      return res.status(400).json(new apiResponse(400, null, "email required"));
     } else if (!userName) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "userName required"));
+        .json(new apiResponse(400, null, "userName required"));
     }
     const isExistingUser = await User.find({ userName });
 
     if (isExistingUser.length > 0) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "userName already exist"));
+        .json(new apiResponse(400, null, "userName already exist"));
     }
 
     const user = await User.create({
@@ -47,14 +47,14 @@ const createUser = async (req, res) => {
     if (user) {
       return res
         .status(201)
-        .json(new apiResonse(201, user, "user created sucessfully"));
+        .json(new apiResponse(201, user, "user created sucessfully"));
     }
   } catch (error) {
     console.log("Error", error);
     return res
       .status(400)
       .json(
-        new apiResonse(400, null, "error in create user controller", error)
+        new apiResponse(400, null, "error in create user controller", error)
       );
   }
 };
@@ -67,17 +67,17 @@ const login = async (req, res) => {
     if (!userName) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "userName required"));
+        .json(new apiResponse(400, null, "userName required"));
     } else if (!password) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "password required"));
+        .json(new apiResponse(400, null, "password required"));
     }
 
     const user = await User.findOne({ userName });
 
     if (!user) {
-      return res.status(400).json(new apiResonse(400, null, "Invalid user"));
+      return res.status(400).json(new apiResponse(400, null, "Invalid user"));
     }
 
     const isMatchPassword = await user.isPasswordCorrect(password);
@@ -90,7 +90,7 @@ const login = async (req, res) => {
       return res
         .status(200)
         .json(
-          new apiResonse(
+          new apiResponse(
             200,
             { user: user, accessToken: token },
             "login Sucessfully"
@@ -100,14 +100,14 @@ const login = async (req, res) => {
       return res
         .status(400)
         .json(
-          new apiResonse(400, null, "something went wrong in login controller")
+          new apiResponse(400, null, "something went wrong in login controller")
         );
     }
   } catch (error) {
     return res
       .status(400)
       .json(
-        new apiResonse(
+        new apiResponse(
           400,
           null,
           "something went wrong in login controller",
@@ -124,7 +124,7 @@ const updatePassword = async (req, res) => {
     if (!newPassword) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "password required"));
+        .json(new apiResponse(400, null, "password required"));
     }
 
     const user = req?.user;
@@ -134,13 +134,13 @@ const updatePassword = async (req, res) => {
     const respone = await user.save({ validateBeforeSave: false });
     return res
       .status(200)
-      .json(new apiResonse(200, respone, "password updated sucessfully"));
+      .json(new apiResponse(200, respone, "password updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
     return res
       .status(400)
       .json(
-        new apiResonse(
+        new apiResponse(
           400,
           null,
           "something went wrong in updatePassword controller",
@@ -155,7 +155,7 @@ const updateEmail = async (req, res) => {
   try {
     const newEmail = req.body?.email;
     if (!newEmail) {
-      return res.status(400).json(new apiResonse(400, null, "email required"));
+      return res.status(400).json(new apiResponse(400, null, "email required"));
     }
 
     const user = req?.user;
@@ -165,13 +165,13 @@ const updateEmail = async (req, res) => {
     const respone = await user.save({ validateBeforeSave: false });
     return res
       .status(200)
-      .json(new apiResonse(200, respone, "email updated sucessfully"));
+      .json(new apiResponse(200, respone, "email updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
     return res
       .status(400)
       .json(
-        new apiResonse(
+        new apiResponse(
           400,
           null,
           "something went wrong in updateEmail controller",
@@ -188,7 +188,7 @@ const updateFirstName = async (req, res) => {
     if (!firstName) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "firstName required"));
+        .json(new apiResponse(400, null, "firstName required"));
     }
 
     const user = req?.user;
@@ -198,13 +198,13 @@ const updateFirstName = async (req, res) => {
     const response = await user.save({ validateBeforeSave: false });
     return res
       .status(200)
-      .json(new apiResonse(200, response, "firstName updated sucessfully"));
+      .json(new apiResponse(200, response, "firstName updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
     return res
       .status(400)
       .json(
-        new apiResonse(
+        new apiResponse(
           400,
           null,
           "something went wrong in updateFirstName controller ",
@@ -221,7 +221,7 @@ const updateLastName = async (req, res) => {
     if (!lastName) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "lastName required"));
+        .json(new apiResponse(400, null, "lastName required"));
     }
 
     const user = req?.user;
@@ -231,13 +231,13 @@ const updateLastName = async (req, res) => {
     const response = await user.save({ validateBeforeSave: false });
     return res
       .status(200)
-      .json(new apiResonse(200, response, "lastName updated sucessfully"));
+      .json(new apiResponse(200, response, "lastName updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
     return res
       .status(400)
       .json(
-        new apiResonse(
+        new apiResponse(
           400,
           null,
           "something went wrong in updateLastName controller ",
@@ -255,21 +255,21 @@ const updateUserDetails = async (req, res) => {
     if (!firstName) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "firstName required"));
+        .json(new apiResponse(400, null, "firstName required"));
     } else if (!lastName) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "lastName required"));
+        .json(new apiResponse(400, null, "lastName required"));
     } else if (!password) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "password required"));
+        .json(new apiResponse(400, null, "password required"));
     } else if (!email) {
-      return res.status(400).json(new apiResonse(400, null, "email required"));
+      return res.status(400).json(new apiResponse(400, null, "email required"));
     } else if (!userName) {
       return res
         .status(400)
-        .json(new apiResonse(400, null, "userName required"));
+        .json(new apiResponse(400, null, "userName required"));
     }
 
     const user = req?.user;
@@ -283,13 +283,13 @@ const updateUserDetails = async (req, res) => {
     res.json({ status: true, message: "user details updated sucessfully" });
     return res
       .status(200)
-      .json(new apiResonse(200, response, "user details updated sucessfully"));
+      .json(new apiResponse(200, response, "user details updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
     return res
       .status(400)
       .json(
-        new apiResonse(
+        new apiResponse(
           400,
           null,
           "something went wrong in userDetailsUpdate controller ",
@@ -310,13 +310,13 @@ const deleteUser = async (req, res) => {
     res.json({ status: true, message: "User deleted sucessfully." });
     return res
       .status(200)
-      .json(new apiResonse(200, null, "User deleted sucessfully"));
+      .json(new apiResponse(200, null, "User deleted sucessfully"));
   } catch (error) {
     console.log("Error", error);
     return res
       .status(400)
       .json(
-        new apiResonse(
+        new apiResponse(
           400,
           null,
           "something went wrong in deleteUser controller ",
@@ -330,13 +330,13 @@ const deleteUser = async (req, res) => {
 const getAllUser = async (req, res) => {
   try {
     const users = await User.find().select("-password");
-    return res.status(200).json(new apiResonse(200, { users }, "success"));
+    return res.status(200).json(new apiResponse(200, { users }, "success"));
   } catch (error) {
     console.log("Error: ", error);
     return res
       .status(400)
       .json(
-        new apiResonse(
+        new apiResponse(
           400,
           null,
           "something went wrong in getAllUser controller ",
