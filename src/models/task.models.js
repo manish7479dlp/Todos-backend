@@ -6,6 +6,7 @@ const taskSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
+      unique: true,
     },
     status: {
       type: Boolean,
@@ -15,6 +16,10 @@ const taskSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    parentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Todos"
+    }
   },
   { timeseries: true }
 );
