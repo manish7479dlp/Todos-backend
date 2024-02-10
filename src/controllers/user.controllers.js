@@ -1,5 +1,7 @@
 const User = require("../models/user.models");
 const bcryptjs = require("bcryptjs");
+const Task = require("../models/task.models")
+const Todos = require("../models/todos.models")
 
 //create user
 const createUser = async (req, res) => {
@@ -192,6 +194,8 @@ const updateUserDetails = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const _id = req?.user._id;
+    await Task.deleteMany({createdBy: _id})
+    await Todos.deleteMany({createdBy: _id})
     await User.findByIdAndDelete(_id);
 
     res.json({ status: true, message: "User deleted sucessfully." });
