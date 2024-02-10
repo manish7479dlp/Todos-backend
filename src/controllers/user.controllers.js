@@ -165,8 +165,8 @@ const updateLastName = async (req, res) => {
 //Update user Details
 const updateUserDetails = async (req, res) => {
   try {
-    const {firstName, lastName, email} = req.body;
-    
+    const { firstName, lastName, email } = req.body;
+
     if (!firstName) {
       res.json({ status: false, message: "firstName required" });
     } else if (!lastName) {
@@ -174,32 +174,31 @@ const updateUserDetails = async (req, res) => {
     } else if (!email) {
       res.json({ status: false, message: "email required" });
     }
-    
+
     const user = req?.user;
 
     (user.firstName = firstName),
-    (user.lastName = lastName),
-    (user.email = email),
-    await user.save({ validateBeforeSave: false });
+      (user.lastName = lastName),
+      (user.email = email),
+      await user.save({ validateBeforeSave: false });
 
     res.json({ status: true, message: "user details updated sucessfully" });
-
   } catch (error) {
     console.log("Error", error);
   }
 };
 
 //Delete user
-const deleteUser = async (req , res) => {
+const deleteUser = async (req, res) => {
   try {
-    const _id = req?.user._id
+    const _id = req?.user._id;
     await User.findByIdAndDelete(_id);
 
-    res.json({status: true , message: "User deleted sucessfully."})
+    res.json({ status: true, message: "User deleted sucessfully." });
   } catch (error) {
-    console.log("Error", error)
+    console.log("Error", error);
   }
-}
+};
 
 module.exports = {
   createUser,
