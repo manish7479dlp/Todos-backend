@@ -10,7 +10,7 @@ router.post("/create" , verifyJWT , createTodos);
 router.patch("/update/title/:_id" , verifyJWT , updateTitle);
 
 //get all todos
-router.get("/", getAllTodos)
+router.get("/", verifyJWT, getAllTodos)
 
 //delete todos
 router.delete("/delete/:_id" , verifyJWT , deleteTodos)
