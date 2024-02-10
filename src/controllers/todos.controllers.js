@@ -75,6 +75,26 @@ const getAllTodos = async (req , res) => {
   }
 }
 
+//delete todos
+const deleteTodos = async (req , res) => {
+  try {
+    const todosId = req?.params._id;
+    if(!todosId) {
+      res.json({status: false , message: "todos id required"})
+      return
+    }
+
+    await Task.deleteMany({parentId: todosId})
+    await Todos.findByIdAndDelete(todosId);
+
+    res.send({status: true , message: "Todos deleted sucessfully"})
+
+  } catch (error) {
+    console.log("Error: ", error)
+    res.json({status: false , error})
+  }
+}
+
 
 // helper function of get todos controller
 async function  findAllTaskOfGivenTodosId(id) {
@@ -89,4 +109,4 @@ async function  findAllTaskOfGivenTodosId(id) {
 
 
 
-module.exports = { createTodos, updateTitle , getAllTodos };
+module.exports = { createTodos, updateTitle , getAllTodos , deleteTodos};
