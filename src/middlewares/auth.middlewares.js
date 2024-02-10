@@ -18,6 +18,7 @@ const verifyJWT = async (req , res , next) => {
 
         if(!user) {
             res.status(404).json({statusCode: 404 , status: false , message: "unauthorized User"})
+            return;
         }
 
         req.user = user;
