@@ -1,7 +1,8 @@
 const User = require("../models/user.models");
 const bcryptjs = require("bcryptjs");
-const Task = require("../models/task.models")
-const Todos = require("../models/todos.models")
+const Task = require("../models/task.models");
+const Todos = require("../models/todos.models");
+const apiResonse = require("../utility/apiResponse");
 
 //create user
 const createUser = async (req, res) => {
@@ -9,23 +10,30 @@ const createUser = async (req, res) => {
     const { firstName, lastName, password, userName, email } = req.body;
 
     if (!firstName) {
-      res.json({ status: false, message: "firstName required" });
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "firstName required"));
     } else if (!lastName) {
-      res.json({ status: false, message: "lastName required" });
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "lastName required"));
     } else if (!password) {
-      res.json({ status: false, message: "password required" });
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "password required"));
     } else if (!email) {
-      res.json({ status: false, message: "email required" });
+      return res.status(400).json(new apiResonse(400, null, "email required"));
     } else if (!userName) {
-      res.json({ status: false, message: "userName required" });
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "userName required"));
     }
     const isExistingUser = await User.find({ userName });
 
     if (isExistingUser.length > 0) {
-      res
+      return res
         .status(400)
-        .json({ status: false, message: "userName already exits" });
-      return;
+        .json(new apiResonse(400, null, "userName already exist"));
     }
 
     const user = await User.create({
@@ -37,12 +45,17 @@ const createUser = async (req, res) => {
     });
 
     if (user) {
-      res
+      return res
         .status(201)
-        .json({ status: true, message: "user created sucessfully" });
+        .json(new apiResonse(201, user, "user created sucessfully"));
     }
   } catch (error) {
     console.log("Error", error);
+    return res
+      .status(400)
+      .json(
+        new apiResonse(400, null, "error in create user controller", error)
+      );
   }
 };
 
@@ -194,8 +207,8 @@ const updateUserDetails = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const _id = req?.user._id;
-    await Task.deleteMany({createdBy: _id})
-    await Todos.deleteMany({createdBy: _id})
+    await Task.deleteMany({ createdBy: _id });
+    await Todos.deleteMany({ createdBy: _id });
     await User.findByIdAndDelete(_id);
 
     res.json({ status: true, message: "User deleted sucessfully." });
@@ -205,15 +218,15 @@ const deleteUser = async (req, res) => {
 };
 
 //get all user
-const getAllUser = async (req , res) => {
+const getAllUser = async (req, res) => {
   try {
-    const users = await User.find().select("-password")
-    res.json({status: true , message: "success", users})
+    const users = await User.find().select("-password");
+    res.json({ status: true, message: "success", users });
   } catch (error) {
-    console.log("Error: ", error)
-    res.json({status: false , error})
+    console.log("Error: ", error);
+    res.json({ status: false, error });
   }
-}
+};
 
 module.exports = {
   createUser,
@@ -224,5 +237,5 @@ module.exports = {
   updateEmail,
   updateUserDetails,
   deleteUser,
-  getAllUser
+  getAllUser,
 };
