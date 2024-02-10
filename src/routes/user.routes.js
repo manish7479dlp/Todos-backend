@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router();
 const {verifyJWT} = require("../middlewares/auth.middlewares")
 
-const {createUser, login, updateFirstName, updateLastName, updateEmail, updatePassword, updateUserDetails, deleteUser} = require("../controllers/user.controllers")
+const {createUser, login, updateFirstName, updateLastName, updateEmail, updatePassword, updateUserDetails, deleteUser, getAllUser} = require("../controllers/user.controllers")
 
 //create user route
 router.post("/create" , createUser);
@@ -27,6 +27,9 @@ router.patch("/update/user-details",verifyJWT , updateUserDetails)
 
 //delete user details
 router.delete("/delete", verifyJWT , deleteUser)
+
+//get all user 
+router.get("/" , getAllUser)
 
 
 module.exports = router;
