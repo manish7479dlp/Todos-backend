@@ -1,4 +1,5 @@
 const Todos = require("../models/todos.models");
+const Task = require("../models/task.models")
 
 //create todos
 const createTodos = async (req, res) => {
@@ -58,4 +59,34 @@ const updateTitle = async (req, res) => {
   }
 };
 
-module.exports = { createTodos, updateTitle };
+//get todos
+const getAllTodos = async (req , res) => {
+  try {
+    const allTodos = await Todos.find()
+    const response = []
+    for(let i = 0; i < allTodos.length; i++) {
+      const data = await findAllTaskOfGivenTodosId(allTodos[i]._id)
+       response.push({Todos: allTodos[i], tasks: data})
+    }
+    res.json(response)
+  } catch (error) {
+    console.log("Error: ", error)
+    res.json({status: false , error})
+  }
+}
+
+
+// helper function of get todos controller
+async function  findAllTaskOfGivenTodosId(id) {
+  try {
+    const response = await Task.find({parentId:id})
+    return response
+  } catch (error) {
+    console.log("Error in findAllTaskOfGivenTodosId(): ", error)
+    return;
+  }
+}
+
+
+
+module.exports = { createTodos, updateTitle , getAllTodos };
