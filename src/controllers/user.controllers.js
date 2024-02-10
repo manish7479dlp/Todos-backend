@@ -122,8 +122,9 @@ const updatePassword = async (req, res) => {
   try {
     const newPassword = req.body?.password;
     if (!newPassword) {
-      res.json({ status: false, message: "password required" });
-      return;
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "password required"));
     }
 
     const user = req?.user;
@@ -131,9 +132,21 @@ const updatePassword = async (req, res) => {
     user.password = newPassword;
 
     await user.save({ validateBeforeSave: false });
-    res.json({ status: true, message: "password updated sucessfully" });
+    return res
+      .status(200)
+      .json(new apiResonse(200, null, "password updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
+    return res
+      .status(400)
+      .json(
+        new apiResonse(
+          400,
+          null,
+          "something went wrong in updatePassword controller",
+          error
+        )
+      );
   }
 };
 
@@ -142,8 +155,7 @@ const updateEmail = async (req, res) => {
   try {
     const newEmail = req.body?.email;
     if (!newEmail) {
-      res.json({ status: false, message: "email required" });
-      return;
+      return res.status(400).json(new apiResonse(400, null, "email required"));
     }
 
     const user = req?.user;
@@ -151,9 +163,21 @@ const updateEmail = async (req, res) => {
     user.email = newEmail;
 
     await user.save({ validateBeforeSave: false });
-    res.json({ status: true, message: "email updated sucessfully" });
+    return res
+      .status(200)
+      .json(new apiResonse(200, null, "email updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
+    return res
+      .status(400)
+      .json(
+        new apiResonse(
+          400,
+          null,
+          "something went wrong in updateEmail controller",
+          error
+        )
+      );
   }
 };
 
@@ -162,18 +186,31 @@ const updateFirstName = async (req, res) => {
   try {
     const firstName = req.body?.firstName;
     if (!firstName) {
-      res.json({ status: false, message: "firstName required" });
-      return;
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "firstName required"));
     }
 
     const user = req?.user;
 
     user.firstName = firstName;
 
-    await user.save({ validateBeforeSave: false });
-    res.json({ status: true, message: "firstName updated sucessfully" });
+    const response = await user.save({ validateBeforeSave: false });
+    return res
+      .status(200)
+      .json(new apiResonse(200, response, "firstName updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
+    return res
+      .status(400)
+      .json(
+        new apiResonse(
+          400,
+          null,
+          "something went wrong in updateFirstName controller ",
+          error
+        )
+      );
   }
 };
 
@@ -182,18 +219,31 @@ const updateLastName = async (req, res) => {
   try {
     const lastName = req.body?.lastName;
     if (!lastName) {
-      res.json({ status: false, message: "lastName required" });
-      return;
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "lastName required"));
     }
 
     const user = req?.user;
 
     user.lastName = lastName;
 
-    await user.save({ validateBeforeSave: false });
-    res.json({ status: true, message: "lastName updated sucessfully" });
+    const response = await user.save({ validateBeforeSave: false });
+    return res
+      .status(200)
+      .json(new apiResonse(200, response, "lastName updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
+    return res
+      .status(400)
+      .json(
+        new apiResonse(
+          400,
+          null,
+          "something went wrong in updateLastName controller ",
+          error
+        )
+      );
   }
 };
 
@@ -203,23 +253,49 @@ const updateUserDetails = async (req, res) => {
     const { firstName, lastName, email } = req.body;
 
     if (!firstName) {
-      res.json({ status: false, message: "firstName required" });
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "firstName required"));
     } else if (!lastName) {
-      res.json({ status: false, message: "lastName required" });
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "lastName required"));
+    } else if (!password) {
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "password required"));
     } else if (!email) {
-      res.json({ status: false, message: "email required" });
+      return res.status(400).json(new apiResonse(400, null, "email required"));
+    } else if (!userName) {
+      return res
+        .status(400)
+        .json(new apiResonse(400, null, "userName required"));
     }
 
     const user = req?.user;
 
     (user.firstName = firstName),
       (user.lastName = lastName),
-      (user.email = email),
-      await user.save({ validateBeforeSave: false });
+      (user.email = email);
+
+    const response = await user.save({ validateBeforeSave: false });
 
     res.json({ status: true, message: "user details updated sucessfully" });
+    return res
+      .status(200)
+      .json(new apiResonse(200, response, "user details updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
+    return res
+      .status(400)
+      .json(
+        new apiResonse(
+          400,
+          null,
+          "something went wrong in userDetailsUpdate controller ",
+          error
+        )
+      );
   }
 };
 
@@ -232,8 +308,27 @@ const deleteUser = async (req, res) => {
     await User.findByIdAndDelete(_id);
 
     res.json({ status: true, message: "User deleted sucessfully." });
+    return res
+      .status(200)
+      .json(
+        new apiResonse(
+          200,
+          null,
+          "User deleted sucessfully"
+        )
+      );
   } catch (error) {
     console.log("Error", error);
+    return res
+      .status(400)
+      .json(
+        new apiResonse(
+          400,
+          null,
+          "something went wrong in deleteUser controller ",
+          error
+        )
+      );
   }
 };
 
@@ -241,10 +336,27 @@ const deleteUser = async (req, res) => {
 const getAllUser = async (req, res) => {
   try {
     const users = await User.find().select("-password");
-    res.json({ status: true, message: "success", users });
+    return res
+    .status(200)
+    .json(
+      new apiResonse(
+        200,
+        {users},
+        "success"
+      )
+    );
   } catch (error) {
     console.log("Error: ", error);
-    res.json({ status: false, error });
+    return res
+      .status(400)
+      .json(
+        new apiResonse(
+          400,
+          null,
+          "something went wrong in getAllUser controller ",
+          error
+        )
+      );
   }
 };
 
