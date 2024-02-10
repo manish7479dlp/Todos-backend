@@ -204,6 +204,17 @@ const deleteUser = async (req, res) => {
   }
 };
 
+//get all user
+const getAllUser = async (req , res) => {
+  try {
+    const users = await User.find().select("-password")
+    res.json({status: true , message: "success", users})
+  } catch (error) {
+    console.log("Error: ", error)
+    res.json({status: false , error})
+  }
+}
+
 module.exports = {
   createUser,
   login,
@@ -213,4 +224,5 @@ module.exports = {
   updateEmail,
   updateUserDetails,
   deleteUser,
+  getAllUser
 };
