@@ -97,11 +97,7 @@ const login = async (req, res) => {
           )
         );
     } else {
-      return res
-        .status(400)
-        .json(
-          new apiResponse(400, null, "something went wrong in login controller")
-        );
+      return res.status(400).json(new apiResponse(400, null, "Invalid user"));
     }
   } catch (error) {
     return res
