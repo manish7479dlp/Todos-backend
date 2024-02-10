@@ -294,7 +294,6 @@ const deleteUser = async (req, res) => {
     await Todos.deleteMany({ createdBy: _id });
     await User.findByIdAndDelete(_id);
 
-    res.json({ status: true, message: "User deleted sucessfully." });
     return res
       .status(200)
       .json(new apiResponse(200, null, "User deleted sucessfully"));
