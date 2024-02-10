@@ -131,10 +131,10 @@ const updatePassword = async (req, res) => {
 
     user.password = newPassword;
 
-    await user.save({ validateBeforeSave: false });
+    const respone = await user.save({ validateBeforeSave: false });
     return res
       .status(200)
-      .json(new apiResonse(200, null, "password updated sucessfully"));
+      .json(new apiResonse(200, respone, "password updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
     return res
@@ -162,10 +162,10 @@ const updateEmail = async (req, res) => {
 
     user.email = newEmail;
 
-    await user.save({ validateBeforeSave: false });
+    const respone = await user.save({ validateBeforeSave: false });
     return res
       .status(200)
-      .json(new apiResonse(200, null, "email updated sucessfully"));
+      .json(new apiResonse(200, respone, "email updated sucessfully"));
   } catch (error) {
     console.log("Error", error);
     return res
@@ -310,13 +310,7 @@ const deleteUser = async (req, res) => {
     res.json({ status: true, message: "User deleted sucessfully." });
     return res
       .status(200)
-      .json(
-        new apiResonse(
-          200,
-          null,
-          "User deleted sucessfully"
-        )
-      );
+      .json(new apiResonse(200, null, "User deleted sucessfully"));
   } catch (error) {
     console.log("Error", error);
     return res
@@ -336,15 +330,7 @@ const deleteUser = async (req, res) => {
 const getAllUser = async (req, res) => {
   try {
     const users = await User.find().select("-password");
-    return res
-    .status(200)
-    .json(
-      new apiResonse(
-        200,
-        {users},
-        "success"
-      )
-    );
+    return res.status(200).json(new apiResonse(200, { users }, "success"));
   } catch (error) {
     console.log("Error: ", error);
     return res
