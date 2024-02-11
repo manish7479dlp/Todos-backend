@@ -1,5 +1,11 @@
 Todos Backend Project
 
+# Requirement
+
+#### nodeJS latest version
+
+#
+
 ## Installation process of node_module package
 
 #### Command
@@ -9,6 +15,8 @@ npm init
 ```
 
 ### Initilize the given .env variable with their appropriate value
+
+#
 
 ###### JWT_SECRET_KEY=
 
