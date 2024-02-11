@@ -10,13 +10,13 @@ const addTask = async (req, res) => {
     if (!todosId) {
       return res
         .status(400)
-        .json(new apiResponse(400, null, "todos id resqured"));
+        .json(new apiResponse(400, null, "todos id required"));
     }
 
     if (!taskName) {
       return res
         .status(400)
-        .json(new apiResponse(400, null, "taksName resqured"));
+        .json(new apiResponse(400, null, "taksName required"));
     }
 
     const todos = await Todos.findById({ _id: todosId });
@@ -50,7 +50,7 @@ const addTask = async (req, res) => {
         new apiResponse(
           200,
           null,
-          "something went wrong in crateTask controller",
+          "something went wrong in createTask controller",
           error
         )
       );
