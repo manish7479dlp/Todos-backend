@@ -114,7 +114,7 @@ const getAllTodos = async (req, res) => {
       .json(
         new apiResponse(
           200,
-          { length: allTodos.length, todosList: responseArray },
+          { length: allTodos.length, todosList: responseArray.reverse() },
           "success"
         )
       );
